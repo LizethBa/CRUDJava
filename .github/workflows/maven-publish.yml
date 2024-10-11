@@ -5,35 +5,34 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+ 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-      - name: Upload WAR file
-        uses: actions/upload-artifact@v3
-        with:
-          name: ldbar-war
-          path: target/ldbar-1.0.1.war
+    - name: Checkout code
+      uses: actions/checkout@v3
+ 
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+ 
+    - name: Grant execute permission for Gradle wrapper
+      run: chmod +x gradlew
+ 
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon
+ 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: build/libs/ldbar-1.0.1.war
       
-      - name: List target directory contents
-        run: ls -l target
+    - name: List target directory contents
+      run: ls -l target
 
   deploy:
     runs-on: ubuntu-latest
