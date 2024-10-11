@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build-output
-        path: build/libs/ldbar-1.0.1.war
+        path: build/libs/
       
     - name: List target directory contents
       run: ls -l target
